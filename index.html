@@ -1,165 +1,209 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#050611">
-<title>Spiritual Universe — Interactive Cosmic Explorer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050816">
+<title>Spiritual Universe | Explore & Discover</title>
 <style>
-:root{--bg:#04050e;--panel:rgba(9,12,29,.72);--line:rgba(190,180,255,.2);--text:#f7f4ff;--muted:#aaa9c5;--violet:#b69cff;--cyan:#8ceaff}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-#space{position:fixed;inset:0;display:block;width:100%;height:100%;touch-action:none;outline:none}
-.vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 40%,rgba(1,2,10,.42) 100%);z-index:1}
-header{position:fixed;z-index:5;top:0;left:0;right:0;padding:18px clamp(14px,3vw,42px);display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(180deg,rgba(3,4,13,.8),transparent);pointer-events:none}
-.brand,.top-actions{pointer-events:auto}.brand{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;text-shadow:0 2px 14px #000}
-.mark{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#8b5cf6,#06b6d4);box-shadow:0 0 26px #8b5cf677;font-size:18px}
-.top-actions{display:flex;gap:8px;align-items:center}.glass-btn{border:1px solid var(--line);background:rgba(8,10,26,.55);color:#eeeaff;border-radius:999px;padding:9px 13px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(14px);cursor:pointer}.glass-btn:hover,.glass-btn.active{border-color:#b69cff99;background:rgba(116,76,206,.25)}
-.hero-copy{position:fixed;z-index:2;top:17%;left:50%;transform:translateX(-50%);text-align:center;width:min(760px,90vw);pointer-events:none;text-shadow:0 2px 20px #02030b}
-.kicker{font-size:10px;letter-spacing:.38em;text-transform:uppercase;color:#d3c6ff}
-h1{font-size:clamp(34px,6vw,76px);letter-spacing:-.06em;line-height:.96;margin:15px 0 12px;background:linear-gradient(100deg,#fff 10%,#c7b5ff 50%,#8ceaff 90%);color:transparent;background-clip:text}
-.hero-copy p{color:#cfcee0;font-size:clamp(12px,1.5vw,15px);line-height:1.65;margin:0}
-.hint{position:fixed;z-index:3;bottom:22px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#c5c0df;background:rgba(5,7,20,.55);border:1px solid #ffffff1b;border-radius:99px;padding:10px 14px;backdrop-filter:blur(10px);white-space:nowrap;pointer-events:none}
-.panel{position:fixed;z-index:4;right:clamp(12px,2.5vw,34px);top:50%;transform:translateY(-40%);width:min(290px,calc(100vw - 24px));padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--panel);backdrop-filter:blur(20px);box-shadow:0 18px 70px #0008;transition:opacity .25s,transform .25s}
-.panel.hidden{opacity:0;pointer-events:none;transform:translate(18px,-40%)}
-.panel-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#b9a8ff}.planet-name{font-size:24px;font-weight:700;letter-spacing:-.04em;margin:4px 0}.planet-desc{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 13px}.fact{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #ffffff13;padding:8px 0;font-size:10px;color:var(--muted)}.fact b{color:#eeeaff;font-weight:600;text-align:right}
-.controls{position:fixed;z-index:4;left:clamp(12px,2.5vw,34px);bottom:22px;display:flex;gap:8px;align-items:center}
-.control-card{display:flex;gap:10px;align-items:center;padding:10px 13px;border-radius:14px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(18px);font-size:10px;color:var(--muted)}
-input[type=range]{width:85px;accent-color:#a78bfa}
-.legend{position:fixed;z-index:3;left:clamp(12px,2.5vw,34px);top:50%;transform:translateY(-50%);display:grid;gap:9px;pointer-events:none}
-.legend span{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#c7c2de;text-shadow:0 1px 8px #000;display:flex;align-items:center;gap:8px}
-.dot{width:5px;height:5px;border-radius:50%;background:#a78bfa;box-shadow:0 0 10px currentColor}
-.toast{position:fixed;z-index:8;top:90px;left:50%;transform:translateX(-50%);padding:10px 14px;border-radius:99px;border:1px solid var(--line);background:#090c20e8;color:#eae5ff;font-size:11px;opacity:0;transition:opacity .2s;pointer-events:none}.toast.show{opacity:1}
-#loading{position:fixed;inset:0;z-index:10;display:grid;place-items:center;background:#04050e;transition:opacity .6s}.loader{text-align:center;color:#c9baff;font-size:11px;letter-spacing:.3em;text-transform:uppercase}.loader i{display:block;width:42px;height:42px;border:1px solid #8b5cf6;border-top-color:transparent;border-radius:50%;margin:0 auto 18px;animation:spin 1s linear infinite;box-shadow:0 0 28px #8b5cf655}
-@keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:650px){header{padding:12px}.brand{font-size:9px;letter-spacing:.13em}.mark{width:29px;height:29px}.top-actions .glass-btn{font-size:9px;padding:8px 9px}.hero-copy{top:16%}.panel{top:auto;bottom:75px;right:12px;transform:none;width:min(255px,calc(100vw - 24px));padding:13px}.panel.hidden{transform:translateY(15px)}.planet-name{font-size:19px}.planet-desc{font-size:11px}.legend{top:auto;bottom:82px;left:12px;transform:none;gap:6px}.legend span{font-size:8px}.controls{bottom:12px;left:12px}.hint{bottom:16px;left:auto;right:12px;transform:none;font-size:8px;padding:8px 10px}.control-card{padding:8px 10px}.control-card label{display:none}input[type=range]{width:65px}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:Arial,sans-serif;background:#030611;color:#fff}
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+header{position:absolute;z-index:5;top:0;left:0;right:0;
+padding:18px 20px;background:linear-gradient(#030611f2,#030611a0,transparent);
+display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-weight:800;letter-spacing:1px;font-size:17px}
+.brand span{color:#f4d28b}
+header small{display:block;color:#aeb9d9;font-size:11px;margin-top:5px}
+.controls{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+button{cursor:pointer;color:#fff;background:#17223dd9;border:1px solid #7181a6;
+border-radius:10px;padding:10px 12px;font-weight:bold}
+button:hover{background:#34456c}
+#intro{position:absolute;z-index:3;top:100px;left:20px;right:20px;
+text-align:center;pointer-events:none}
+#intro .eyebrow{font-size:11px;letter-spacing:3px;color:#e9c77c}
+h1{font-size:clamp(30px,5vw,58px);line-height:1.05;margin:10px 0;
+background:linear-gradient(90deg,#fff,#c8d9ff,#f4d28b);
+-webkit-background-clip:text;background-clip:text;color:transparent}
+#intro p{margin:8px auto;color:#c5cce1;font-size:14px;max-width:580px}
+#viewport{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
+#viewport.dragging{cursor:grabbing}
+#universe{position:absolute;width:1100px;height:850px;left:50%;top:55%;
+transform:translate(-50%,-50%) scale(1);transform-origin:center center}
+.nebula{position:absolute;inset:0;border-radius:50%;
+background:radial-gradient(ellipse at 50% 48%,#14275b88,transparent 55%),
+radial-gradient(ellipse at 20% 65%,#572a6d44,transparent 40%),
+radial-gradient(ellipse at 80% 30%,#1d658044,transparent 40%)}
+.orbit{position:absolute;left:50%;top:50%;border:1px solid #9bb7ff30;
+border-radius:50%;transform:translate(-50%,-50%) rotate(-13deg)}
+.o1{width:300px;height:180px}.o2{width:500px;height:300px}
+.o3{width:720px;height:440px}.o4{width:950px;height:580px}
+.sun{position:absolute;left:50%;top:50%;width:95px;height:95px;
+transform:translate(-50%,-50%);border-radius:50%;
+background:radial-gradient(circle at 35% 30%,#fff9cc,#ffd36d 30%,#ff8b3d 65%,#8e3b88);
+box-shadow:0 0 30px #ffbb62,0 0 90px #ff9d5577;
+display:grid;place-items:center;font-size:28px}
+.planet{position:absolute;display:flex;flex-direction:column;align-items:center;
+gap:8px;text-decoration:none;color:white;text-align:center;z-index:2;
+width:150px;transform:translate(-50%,-50%);touch-action:manipulation}
+.ball{display:block;width:var(--size,58px);height:var(--size,58px);border-radius:50%;
+background:radial-gradient(circle at 30% 25%,#ffffff,#8ab8e8 18%,var(--planet),#11172c 85%);
+box-shadow:inset -12px -8px 18px #0009,0 0 20px var(--planet);
+transition:transform .2s,box-shadow .2s;position:relative}
+.ball:after{content:"";position:absolute;left:-15%;right:-15%;height:12px;
+top:45%;border:4px solid #ffffff77;border-radius:50%;transform:rotate(-25deg)}
+.planet:hover .ball{transform:scale(1.17);box-shadow:0 0 35px var(--planet)}
+.planet b{font-size:13px;text-shadow:0 2px 8px #000;line-height:1.3}
+.planet small{font-size:10px;color:#c8d7ff}
+.p1{left:22%;top:31%;--planet:#67b6ff;--size:60px}
+.p2{left:34%;top:68%;--planet:#df9a68;--size:48px}
+.p3{left:67%;top:24%;--planet:#54d9c5;--size:68px}
+.p4{left:79%;top:52%;--planet:#b69aff;--size:52px}
+.p5{left:59%;top:77%;--planet:#ed7b9b;--size:62px}
+.p6{left:15%;top:53%;--planet:#e7c76b;--size:42px}
+.p7{left:42%;top:17%;--planet:#9bb1ff;--size:45px}
+.p8{left:88%;top:78%;--planet:#74d49a;--size:46px}
+#hint{position:absolute;z-index:4;bottom:22px;left:12px;right:12px;
+text-align:center;color:#aeb9d9;font-size:11px;letter-spacing:1px;
+text-shadow:0 2px 8px #000}
+#notice{position:absolute;z-index:8;left:50%;bottom:55px;transform:translateX(-50%);
+background:#111b32;border:1px solid #596b92;border-radius:12px;padding:12px 16px;
+width:max-content;max-width:90%;font-size:13px;display:none}
+@media(max-width:600px){
+header{padding:12px;align-items:flex-start}
+.brand{font-size:14px}.controls{max-width:150px}
+button{padding:8px;font-size:12px}
+#intro{top:100px}
+#intro p{font-size:12px}
+#universe{width:900px;height:750px}
+.planet{width:115px}
+.planet b{font-size:11px}
+.planet small{font-size:9px}
+}
 </style>
 </head>
 <body>
-<canvas id="space" aria-label="Interactive 3D universe. Drag to look around and select a planet."></canvas>
-<div class="vignette"></div>
-<div id="loading"><div class="loader"><i></i>Entering the universe</div></div>
+<canvas id="stars"></canvas>
+
 <header>
- <div class="brand"><span class="mark">✧</span> Spiritual Universe</div>
- <div class="top-actions">
-  <button class="glass-btn active" id="realBtn">Cosmic</button>
-  <button class="glass-btn" id="spiritBtn">Spiritual glow</button>
-  <button class="glass-btn" id="resetBtn">Reset view</button>
- </div>
+  <div class="brand">✦ SPIRITUAL <span>UNIVERSE</span>
+    <small>Explore faith • Discover peace</small>
+  </div>
+  <div class="controls">
+    <button id="minus" aria-label="Zoom out">−</button>
+    <button id="plus" aria-label="Zoom in">＋</button>
+    <button id="reset">Reset view</button>
+  </div>
 </header>
-<div class="hero-copy">
- <div class="kicker">A living window into infinity</div>
- <h1>Beyond the<br>known universe</h1>
- <p>Explore celestial worlds, drift through a spiral galaxy and discover a quieter sense of wonder.</p>
+
+<section id="intro">
+  <div class="eyebrow">A JOURNEY OF FAITH AND WISDOM</div>
+  <h1>Explore Your Spiritual Universe</h1>
+  <p>Choose a glowing planet to watch a devotional video and find a moment of peace.</p>
+</section>
+
+<div id="viewport">
+  <div id="universe">
+    <div class="nebula"></div>
+    <div class="orbit o1"></div>
+    <div class="orbit o2"></div>
+    <div class="orbit o3"></div>
+    <div class="orbit o4"></div>
+    <div class="sun" aria-label="Spiritual light">ੴ</div>
+
+    <a class="planet p1" href="https://youtube.com/shorts/me9ELLpDcZs" target="_blank" rel="noopener">
+      <span class="ball"></span><b>Guru Nanak Dev Ji</b><small>Watch video 1 ↗</small>
+    </a>
+    <a class="planet p2" href="https://youtube.com/shorts/uefASBI_dAc" target="_blank" rel="noopener">
+      <span class="ball"></span><b>Guru Nanak's Udasis</b><small>Watch video 2 ↗</small>
+    </a>
+    <a class="planet p3" href="https://youtube.com/shorts/wlGC2XKTeHU" target="_blank" rel="noopener">
+      <span class="ball"></span><b>Waheguru Simran</b><small>Watch video 3 ↗</small>
+    </a>
+    <a class="planet p4" href="https://youtube.com/shorts/oEFh8HwP8sU" target="_blank" rel="noopener">
+      <span class="ball"></span><b>Gurbani & Shabad</b><small>Watch video 4 ↗</small>
+    </a>
+    <a class="planet p5" href="https://youtube.com/shorts/e0IBOAgqR58" target="_blank" rel="noopener">
+      <span class="ball"></span><b>Char Sahibzade</b><small>Watch video 5 ↗</small>
+    </a>
+    <a class="planet p6" href="https://youtube.com/shorts/WYVprEgk2VE" target="_blank" rel="noopener">
+      <span class="ball"></span><b>Morning Inspiration</b><small>Watch video 6 ↗</small>
+    </a>
+    <a class="planet p7" href="https://youtube.com/shorts/w6yza7JmqJU" target="_blank" rel="noopener">
+      <span class="ball"></span><b>Sikh History</b><small>Watch video 7 ↗</small>
+    </a>
+    <a class="planet p8" href="https://youtu.be/ZqE_Yr9jaNE" target="_blank" rel="noopener">
+      <span class="ball"></span><b>More Spiritual Videos</b><small>Watch video 8 ↗</small>
+    </a>
+  </div>
 </div>
-<div class="legend"><span><i class="dot"></i> Star systems</span><span><i class="dot" style="background:#67e8f9"></i> Deep space</span><span><i class="dot" style="background:#f0abfc"></i> Cosmic dust</span></div>
-<aside class="panel hidden" id="info">
- <div class="panel-top"><span class="eyebrow">Celestial profile</span><button class="glass-btn" id="closeInfo" aria-label="Close planet information">×</button></div>
- <div class="eyebrow" id="planetType">PLANET</div><div class="planet-name" id="planetName">Earth</div>
- <p class="planet-desc" id="planetDesc">A world of oceans, clouds and life.</p>
- <div class="fact"><span>Scene role</span><b id="planetRole">Home world</b></div>
- <div class="fact"><span>Appearance</span><b id="planetLook">Blue oceans</b></div>
- <div class="fact"><span>Explore</span><b>Tap another world</b></div>
-</aside>
-<div class="controls">
- <div class="control-card"><label for="speed">Orbit speed</label><input id="speed" type="range" min="0" max="2" step=".05" value=".55"><span id="speedVal">0.55×</span></div>
- <button class="glass-btn" id="pauseBtn">Pause</button>
-</div>
-<div class="hint">Drag to rotate · Scroll to zoom · Tap a planet</div>
-<div class="toast" id="toast"></div>
-<script type="module">
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 
-const canvas=document.querySelector('#space');
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x04050e);
-scene.fog=new THREE.FogExp2(0x04050e,0.00085);
-const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,3000);
-camera.position.set(0,105,285);
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setSize(innerWidth,innerHeight);
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.2;
+<div id="hint">DRAG TO EXPLORE • USE + / − TO ZOOM • TAP A PLANET TO WATCH</div>
+<div id="notice" role="status"></div>
 
-scene.add(new THREE.AmbientLight(0x7180bb,.75));
-const sunLight=new THREE.PointLight(0xffd6a0,1800,1200,1.5);sunLight.position.set(0,0,0);scene.add(sunLight);
-const fill=new THREE.PointLight(0x7867ff,280,900);fill.position.set(-170,100,-160);scene.add(fill);
-
-const starGeo=new THREE.BufferGeometry(),starCount=10500,positions=new Float32Array(starCount*3),colors=new Float32Array(starCount*3);
-for(let i=0;i<starCount;i++){const r=THREE.MathUtils.randFloat(330,1500),u=Math.random()*Math.PI*2,v=Math.acos(THREE.MathUtils.randFloatSpread(2));positions[i*3]=r*Math.sin(v)*Math.cos(u);positions[i*3+1]=r*Math.cos(v);positions[i*3+2]=r*Math.sin(v)*Math.sin(u);const c=new THREE.Color().setHSL(THREE.MathUtils.randFloat(.52,.78),THREE.MathUtils.randFloat(.2,.75),THREE.MathUtils.randFloat(.65,1));colors.set([c.r,c.g,c.b],i*3)}
-starGeo.setAttribute('position',new THREE.BufferAttribute(positions,3));starGeo.setAttribute('color',new THREE.BufferAttribute(colors,3));
-const stars=new THREE.Points(starGeo,new THREE.PointsMaterial({size:1.35,vertexColors:true,transparent:true,opacity:.9,sizeAttenuation:true}));scene.add(stars);
-
-// Spiral galaxy made from luminous points.
-const galaxyGroup=new THREE.Group();scene.add(galaxyGroup);
-const gCount=26000,gPos=new Float32Array(gCount*3),gCol=new Float32Array(gCount*3);
-const palette=[new THREE.Color('#f6c98b'),new THREE.Color('#b49aff'),new THREE.Color('#5edcff'),new THREE.Color('#f18bd7')];
-for(let i=0;i<gCount;i++){const arm=i%5,rad=Math.pow(Math.random(),.58)*115,angle=arm*Math.PI*2/5+rad*.095+THREE.MathUtils.randFloatSpread(.55);const thick=THREE.MathUtils.randFloatSpread(7);gPos[i*3]=Math.cos(angle)*rad+Math.cos(angle+Math.PI/2)*thick;gPos[i*3+1]=THREE.MathUtils.randFloatSpread(10)*(1-rad/140);gPos[i*3+2]=Math.sin(angle)*rad+Math.sin(angle+Math.PI/2)*thick;const col=palette[Math.floor(Math.random()*palette.length)].clone().multiplyScalar(THREE.MathUtils.randFloat(.45,1.35));gCol.set([col.r,col.g,col.b],i*3)}
-const gg=new THREE.BufferGeometry();gg.setAttribute('position',new THREE.BufferAttribute(gPos,3));gg.setAttribute('color',new THREE.BufferAttribute(gCol,3));
-const gal=new THREE.Points(gg,new THREE.PointsMaterial({size:1.65,vertexColors:true,transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false}));galaxyGroup.add(gal);galaxyGroup.rotation.x=.38;galaxyGroup.rotation.z=-.15;
-const core=new THREE.Mesh(new THREE.SphereGeometry(10,32,32),new THREE.MeshBasicMaterial({color:0xffd69a}));galaxyGroup.add(core);
-const coreGlow=new THREE.Sprite(new THREE.SpriteMaterial({map:makeGlow(),color:0xffbb83,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));coreGlow.scale.set(65,65,1);galaxyGroup.add(coreGlow);
-function makeGlow(){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d'),gr=x.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,'rgba(255,245,220,1)');gr.addColorStop(.15,'rgba(255,190,120,.65)');gr.addColorStop(1,'rgba(180,100,255,0)');x.fillStyle=gr;x.fillRect(0,0,128,128);const t=new THREE.CanvasTexture(c);return t}
-
-// Soft nebula clouds as translucent sprite layers.
-const nebulaGroup=new THREE.Group();scene.add(nebulaGroup);
-for(let i=0;i<16;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:makeNebula(),color:[0x5438a0,0x174d82,0x8b287c,0x245c9a][i%4],transparent:true,opacity:.12,blending:THREE.AdditiveBlending,depthWrite:false}));s.position.set(THREE.MathUtils.randFloatSpread(560),THREE.MathUtils.randFloatSpread(260),THREE.MathUtils.randFloat(-380,-100));s.scale.set(THREE.MathUtils.randFloat(100,260),THREE.MathUtils.randFloat(80,190),1);nebulaGroup.add(s)}
-function makeNebula(){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d'),g=x.createRadialGradient(64,64,3,64,64,63);g.addColorStop(0,'rgba(255,255,255,.8)');g.addColorStop(.28,'rgba(255,255,255,.38)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,128,128);return new THREE.CanvasTexture(c)}
-
-const sun=new THREE.Mesh(new THREE.SphereGeometry(13,48,48),new THREE.MeshBasicMaterial({color:0xffd99a}));scene.add(sun);
-const sunHalo=new THREE.Sprite(new THREE.SpriteMaterial({map:makeGlow(),color:0xffbd77,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));sunHalo.scale.set(75,75,1);sun.add(sunHalo);
-
-const clickable=[],orbiters=[];
-function makePlanet(name,desc,role,look,size,color,orbit,speed,opts={}) {
- const pivot=new THREE.Group();scene.add(pivot);pivot.rotation.y=Math.random()*Math.PI*2;
- const geo=new THREE.SphereGeometry(size,48,48);
- const mat=new THREE.MeshStandardMaterial({color,roughness:opts.rough??.82,metalness:opts.metal??.05,emissive:opts.emissive??0x000000,emissiveIntensity:.2});
- const mesh=new THREE.Mesh(geo,mat);mesh.position.set(orbit,0,0);mesh.userData={name,desc,role,look};pivot.add(mesh);
- const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:makeGlow(),color,transparent:true,opacity:.28,blending:THREE.AdditiveBlending,depthWrite:false}));glow.scale.set(size*5,size*5,1);mesh.add(glow);
- if(opts.ring){const ring=new THREE.Mesh(new THREE.RingGeometry(size*1.35,size*2.05,96),new THREE.MeshBasicMaterial({color:opts.ring,side:THREE.DoubleSide,transparent:true,opacity:.65}));ring.rotation.x=Math.PI/2.25;mesh.add(ring)}
- const orbitLine=new THREE.Mesh(new THREE.RingGeometry(orbit-.12,orbit+.12,180),new THREE.MeshBasicMaterial({color:0x8d83bc,side:THREE.DoubleSide,transparent:true,opacity:.12}));orbitLine.rotation.x=Math.PI/2;scene.add(orbitLine);
- clickable.push(mesh);orbiters.push({pivot,speed});return mesh;
+<script>
+const canvas=document.getElementById('stars');
+const ctx=canvas.getContext('2d');
+let stars=[];
+function makeStars(){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  canvas.width=innerWidth*dpr;
+  canvas.height=innerHeight*dpr;
+  canvas.style.width=innerWidth+'px';
+  canvas.style.height=innerHeight+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  stars=Array.from({length:Math.min(260,Math.floor(innerWidth*innerHeight/3500))},()=>({
+    x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+    r:Math.random()*1.5+.3,a:Math.random()*.7+.2,s:Math.random()*.015+.003
+  }));
 }
-makePlanet('Mercury','A small, cratered rocky world close to the Sun.','Inner planet','Rocky grey',2.3,0x9b8c80,28,.9);
-makePlanet('Venus','A bright world wrapped in thick golden clouds.','Inner planet','Golden cloud cover',4.1,0xd5a66b,43,.68);
-const earth=makePlanet('Earth','Our blue home world, with oceans, clouds and a delicate atmosphere.','Home world','Blue oceans and white clouds',5.2,0x287ec4,63,.48,{emissive:0x071a38});
-makePlanet('Mars','A rust-coloured desert world with giant volcanoes and ancient valleys.','Rocky planet','Red desert surface',3.7,0xc45d43,83,.38);
-makePlanet('Jupiter','A colossal gas giant with swirling cloud bands and immense storms.','Gas giant','Cream and amber bands',11,0xd4a16e,125,.23,{rough:.55});
-const saturn=makePlanet('Saturn','A magnificent gas giant surrounded by a broad system of icy rings.','Ringed giant','Pale gold with rings',9,0xd5bd8e,174,.17,{ring:0xcbb8a4,rough:.6});
-makePlanet('Uranus','An icy blue giant tipped dramatically on its side.','Ice giant','Pale cyan',6.2,0x80d8dc,220,.12);
-makePlanet('Neptune','A distant deep-blue world swept by powerful winds.','Ice giant','Deep blue',6,0x355bd4,260,.09);
-const moonPivot=new THREE.Group();earth.add(moonPivot);const moon=new THREE.Mesh(new THREE.SphereGeometry(1.45,32,32),new THREE.MeshStandardMaterial({color:0xb9b9bd,roughness:1}));moon.position.set(9,1,0);moonPivot.add(moon);orbiters.push({pivot:moonPivot,speed:.8});
+function drawStars(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  for(const s of stars){
+    s.a+=s.s;
+    ctx.globalAlpha=.3+Math.abs(Math.sin(s.a))*.7;
+    ctx.fillStyle='#dce7ff';
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  requestAnimationFrame(drawStars);
+}
+makeStars();drawStars();
+window.addEventListener('resize',makeStars);
 
-// A distant decorative second galaxy.
-const farGal=new THREE.Group();farGal.position.set(-260,120,-380);farGal.rotation.set(.9,.4,.2);scene.add(farGal);
-const far=new THREE.Points(gg,new THREE.PointsMaterial({size:.55,color:0x9c8bff,transparent:true,opacity:.32,blending:THREE.AdditiveBlending,depthWrite:false}));far.scale.setScalar(.35);farGal.add(far);
-
-let spiritual=false,paused=false,orbitSpeed=.55;
-const raycaster=new THREE.Raycaster();raycaster.params.Points.threshold=4;const pointer=new THREE.Vector2();
-let downX=0,downY=0,dragging=false,dragged=false,theta=0,phi=1.22,radius=305,target=new THREE.Vector3(0,0,0);
-function updateCamera(){phi=THREE.MathUtils.clamp(phi,.15,Math.PI-.15);camera.position.set(target.x+radius*Math.sin(phi)*Math.sin(theta),target.y+radius*Math.cos(phi),target.z+radius*Math.sin(phi)*Math.cos(theta));camera.lookAt(target)}
-updateCamera();
-canvas.addEventListener('pointerdown',e=>{dragging=true;dragged=false;downX=e.clientX;downY=e.clientY;canvas.setPointerCapture(e.pointerId)});
-canvas.addEventListener('pointermove',e=>{if(!dragging)return;const dx=e.clientX-downX,dy=e.clientY-downY;if(Math.abs(dx)+Math.abs(dy)>3)dragged=true;theta-=dx*.005;phi-=dy*.005;downX=e.clientX;downY=e.clientY;updateCamera()});
-canvas.addEventListener('pointerup',e=>{dragging=false;if(!dragged){pointer.x=e.clientX/innerWidth*2-1;pointer.y=-(e.clientY/innerHeight)*2+1;raycaster.setFromCamera(pointer,camera);const hits=raycaster.intersectObjects(clickable,false);if(hits.length)showPlanet(hits[0].object);else hidePanel()}});
-canvas.addEventListener('wheel',e=>{radius=THREE.MathUtils.clamp(radius+e.deltaY*.18,105,620);updateCamera()},{passive:true});
-function showPlanet(mesh){const d=mesh.userData;document.querySelector('#planetName').textContent=d.name;document.querySelector('#planetDesc').textContent=d.desc;document.querySelector('#planetType').textContent=d.role;document.querySelector('#planetRole').textContent=d.role;document.querySelector('#planetLook').textContent=d.look;document.querySelector('#info').classList.remove('hidden')}
-function hidePanel(){document.querySelector('#info').classList.add('hidden')}
-document.querySelector('#closeInfo').onclick=hidePanel;
-function toast(msg){const t=document.querySelector('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700)}
-document.querySelector('#speed').addEventListener('input',e=>{orbitSpeed=+e.target.value;document.querySelector('#speedVal').textContent=orbitSpeed.toFixed(2)+'×'});
-document.querySelector('#pauseBtn').onclick=()=>{paused=!paused;document.querySelector('#pauseBtn').textContent=paused?'Resume':'Pause';toast(paused?'Cosmic motion paused':'Cosmic motion resumed')};
-document.querySelector('#resetBtn').onclick=()=>{theta=0;phi=1.22;radius=305;target.set(0,0,0);updateCamera();hidePanel();toast('View reset')};
-document.querySelector('#realBtn').onclick=()=>{spiritual=false;document.querySelector('#realBtn').classList.add('active');document.querySelector('#spiritBtn').classList.remove('active');scene.fog.color.set(0x04050e);scene.fog.density=.00085;gal.material.opacity=.9;toast('Cosmic exploration mode')};
-document.querySelector('#spiritBtn').onclick=()=>{spiritual=true;document.querySelector('#spiritBtn').classList.add('active');document.querySelector('#realBtn').classList.remove('active');scene.fog.color.set(0x120a2b);scene.fog.density=.00055;gal.material.opacity=1;toast('Spiritual glow activated')};
-
-let frame=0;
-function animate(){requestAnimationFrame(animate);if(!paused){frame+=.003*orbitSpeed;orbiters.forEach(o=>o.pivot.rotation.y+=.0018*o.speed*orbitSpeed);galaxyGroup.rotation.y+=.00055*orbitSpeed;farGal.rotation.y-=.00018*orbitSpeed;stars.rotation.y+=.000012*orbitSpeed;sun.rotation.y+=.001*orbitSpeed;nebulaGroup.rotation.y+=.00008*orbitSpeed;if(spiritual){sunHalo.material.opacity=.68+.22*Math.sin(frame*3);coreGlow.material.opacity=.7+.25*Math.sin(frame*2)}}renderer.render(scene,camera)}
-animate();
-addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2))});
-document.querySelector('#loading').style.opacity='0';setTimeout(()=>document.querySelector('#loading').remove(),650);
+const viewport=document.getElementById('viewport');
+const universe=document.getElementById('universe');
+let zoom=1,dx=0,dy=0,dragging=false,startX=0,startY=0,lastX=0,lastY=0,moved=false;
+function render(){
+  universe.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(${zoom})`;
+}
+document.getElementById('plus').onclick=()=>{zoom=Math.min(zoom+.15,2.2);render()};
+document.getElementById('minus').onclick=()=>{zoom=Math.max(zoom-.15,.55);render()};
+document.getElementById('reset').onclick=()=>{zoom=1;dx=0;dy=0;render()};
+viewport.addEventListener('pointerdown',e=>{
+  if(e.target.closest('.planet'))return;
+  dragging=true;moved=false;startX=e.clientX;startY=e.clientY;
+  lastX=dx;lastY=dy;viewport.classList.add('dragging');
+  try{viewport.setPointerCapture(e.pointerId)}catch(_){}
+});
+viewport.addEventListener('pointermove',e=>{
+  if(!dragging)return;
+  const mx=e.clientX-startX,my=e.clientY-startY;
+  if(Math.abs(mx)+Math.abs(my)>4)moved=true;
+  dx=lastX+mx;dy=lastY+my;render();
+});
+function stopDrag(){dragging=false;viewport.classList.remove('dragging')}
+viewport.addEventListener('pointerup',stopDrag);
+viewport.addEventListener('pointercancel',stopDrag);
+viewport.addEventListener('wheel',e=>{
+  e.preventDefault();zoom=Math.max(.55,Math.min(2.2,zoom+(e.deltaY<0?.08:-.08)));render();
+},{passive:false});
+document.querySelectorAll('.planet').forEach((p,i)=>{
+  p.addEventListener('click',e=>{
+    if(moved){e.preventDefault();return}
+  });
+});
 </script>
 </body>
 </html>
